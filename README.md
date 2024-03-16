@@ -23,11 +23,6 @@ relay 1 deactivates, this activates the 3-way water valve moving it back into it
 flow into the holding tanks.  
 The system also has a manual mode where at any time the sequence of operation can be performed when desired. 
 
-## Current test bed set up for prototyping and testing.  
-![Water_Flow_added](https://github.com/Beau28713/Arduino_BackFlush_Control/assets/65408911/e702b7a6-e988-44c8-b125-59c5cffbebe8)
-
-
-
 ## Field units 
 [3-way water valve](https://www.aliexpress.us/item/3256804648845790.html?spm=a2g0o.order_list.order_list_main.5.695718020k35QP&gatewayAdapt=glo2usa)    
 [5GPM submergible pump](https://www.amazon.com/dp/B09ZV2364K?psc=1&ref=ppx_yo2ov_dt_b_product_details)    
