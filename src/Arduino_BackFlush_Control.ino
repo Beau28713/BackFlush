@@ -115,7 +115,7 @@ void loop()
       pump_on();
       pump_off();
       valve_close();
-      back_flushes_completed += 1
+      back_flushes_completed += 1;
     }
     else
     {
