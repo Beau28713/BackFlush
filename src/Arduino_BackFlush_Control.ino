@@ -111,6 +111,11 @@ void loop()
     {
       lcd.setCursor(0, 3);
       lcd.print("No Flow: ");
+      valve_open();
+      pump_on();
+      pump_off();
+      valve_close();
+      back_flushes_completed += 1
     }
     else
     {
