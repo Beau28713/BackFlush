@@ -1,13 +1,3 @@
-
-/*
-  Adafruit BackPack I2C connection
-  The circuit:
- * 5V to Arduino 5V pin
- * GND to Arduino GND pin
- * CLK to Analog #5
- * DAT to Analog #4
-*/
-
 #include "Adafruit_LiquidCrystal.h"
 #include <Arduino.h>
 
@@ -28,33 +18,25 @@ int tilt_switch = 4;
 
 unsigned long previous_time = 0;
 unsigned long prev_time = 0;
+unsigned long flow_prev_time = 0;
 unsigned long weekly_timer;
 unsigned long count_timer;
 
 unsigned long time_interval = 1000;
-unsigned long weekly_interval = 604800000; // one week in Milliseconds
+unsigned long check_flow_interval = 5000;
+unsigned long weekly_interval = 604800000;
+
 int back_flushes_completed = 0;
 
 volatile uint8_t lastflowpinstate;
-volatile uint16_t pulses = 0; // number of pulses
+volatile uint16_t pulses = 0;
 uint8_t flow;
-volatile float flowrate;      // flow rate
+volatile float flowrate;
 volatile uint32_t lastflowratetimer = 0;
 
 SIGNAL(TIMER0_COMPA_vect)
 {
-  flow = digitalRead(flow_sensor);
-  
-  if (flow == lastflowpinstate) {
-    lastflowratetimer++;
-    return; // nothing changed!
-  }
-
-
-  lastflowpinstate = flow;
-  flowrate = 1000.0;
-  flowrate /= lastflowratetimer; // in hertz
-  lastflowratetimer = 0;
+  updateFlowRate();
 }
 
 void setup()
@@ -73,7 +55,6 @@ void setup()
   digitalWrite(valve_control_relay, HIGH);
   digitalWrite(pump_control_relay, HIGH);
 
-  // set up the LCD's number of rows and columns:
   if (!lcd.begin(20, 4))
   {
     Serial.println("Could not init backpack. Check wiring.");
@@ -122,17 +103,23 @@ void loop()
     }
   }
 
-  if (flowrate < 12)
+  if (weekly_timer - flow_prev_time >= check_flow_interval)
   {
-    lcd.setCursor(0, 3);
-    lcd.print("No Flow: ");
+    flow_prev_time = weekly_timer;
+
+    if (flowrate < 12)
+    {
+      lcd.setCursor(0, 3);
+      lcd.print("No Flow: ");
+    }
+    else
+    {
+      lcd.setCursor(0, 3);
+      lcd.print("Flow:    ");
+    }
+      lcd.print(flowrate);
   }
-  else
-  {
-    lcd.setCursor(0, 3);
-    lcd.print("Flow:    ");
-  }
-  lcd.print(flowrate);
+  
   
 
   lcd.setCursor(0, 2);
@@ -149,7 +136,6 @@ void useInterrupt(boolean v)
   }
   else
   {
-    // do not call the interrupt function COMPA anymore
     TIMSK0 &= ~_BV(OCIE0A);
   }
 }
@@ -200,4 +186,20 @@ void count_down_timer(int timer)
       time_count += 1;
     }
   }
+}
+
+void updateFlowRate() 
+{
+  flow = digitalRead(flow_sensor);
+  
+  if (flow == lastflowpinstate) 
+  {
+    lastflowratetimer++;
+    return;
+  }
+  
+  lastflowpinstate = flow;
+  flowrate = 1000.0;
+  flowrate /= lastflowratetimer;
+  lastflowratetimer = 0;
 }
