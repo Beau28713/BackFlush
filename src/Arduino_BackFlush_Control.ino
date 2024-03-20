@@ -23,20 +23,51 @@ unsigned long weekly_timer;
 unsigned long count_timer;
 
 unsigned long time_interval = 1000;
-unsigned long check_flow_interval = 5000;
+unsigned long check_flow_interval = 10000;
 unsigned long weekly_interval = 604800000;
 
 int back_flushes_completed = 0;
 
-volatile uint8_t lastflowpinstate;
-volatile uint16_t pulses = 0;
-uint8_t flow;
-volatile float flowrate;
-volatile uint32_t lastflowratetimer = 0;
+unsigned long lastflowpinstate;
+unsigned long lastpulsesstate = 0;
+unsigned long pulses = 0;
+unsigned long flow;
+float flowrate;
+unsigned long lastflowratetimer = 0;
 
 SIGNAL(TIMER0_COMPA_vect)
 {
-  updateFlowRate();
+  flow = digitalRead(flow_sensor);
+  
+  if (flow == lastflowpinstate) 
+  {
+    lastflowratetimer++;
+    return;
+  }
+
+  if(flow == HIGH)
+  {
+    pulses++;
+  }
+  lastflowpinstate = flow;
+  flowrate = 1000.0;
+  flowrate /= lastflowratetimer;
+  lastflowratetimer = 0;
+  
+  
+}
+
+void useInterrupt(boolean v)
+{
+  if (v)
+  {
+    OCR0A = 0xAF;
+    TIMSK0 |= _BV(OCIE0A);
+  }
+  else
+  {
+    TIMSK0 &= ~_BV(OCIE0A);
+  }
 }
 
 void setup()
@@ -71,7 +102,7 @@ void loop()
 
   tilt_switch_position = digitalRead(tilt_switch);
   manual_auto_switch_position = digitalRead(manual_auto_control_switch);
-
+  
   if (manual_auto_switch_position == LOW)
   {
     man_backflush_switch_position = digitalRead(man_backflush_switch);
@@ -106,43 +137,22 @@ void loop()
   if (weekly_timer - flow_prev_time >= check_flow_interval)
   {
     flow_prev_time = weekly_timer;
-
-    if (flowrate < 12)
+    if(pulses - lastpulsesstate > 0)
     {
       lcd.setCursor(0, 3);
-      lcd.print("No Flow: ");
-      valve_open();
-      pump_on();
-      pump_off();
-      valve_close();
-      back_flushes_completed += 1;
+      lcd.print("Flow detected");
+      lastpulsesstate = pulses;
     }
     else
     {
       lcd.setCursor(0, 3);
-      lcd.print("Flow:    ");
+      lcd.print("No flow detected");
     }
-      lcd.print(flowrate);
   }
   
-  
-
   lcd.setCursor(0, 2);
   lcd.print("BF completed: ");
   lcd.print(back_flushes_completed);
-}
-
-void useInterrupt(boolean v)
-{
-  if (v)
-  {
-    OCR0A = 0xAF;
-    TIMSK0 |= _BV(OCIE0A);
-  }
-  else
-  {
-    TIMSK0 &= ~_BV(OCIE0A);
-  }
 }
 
 void valve_open()
@@ -167,7 +177,7 @@ void pump_on()
   lcd.setCursor(0, 1);
   lcd.print("Pump on         ");
   digitalWrite(pump_control_relay, LOW);
-  count_down_timer(15);
+  count_down_timer(10);
 }
 
 void pump_off()
@@ -191,20 +201,4 @@ void count_down_timer(int timer)
       time_count += 1;
     }
   }
-}
-
-void updateFlowRate() 
-{
-  flow = digitalRead(flow_sensor);
-  
-  if (flow == lastflowpinstate) 
-  {
-    lastflowratetimer++;
-    return;
-  }
-  
-  lastflowpinstate = flow;
-  flowrate = 1000.0;
-  flowrate /= lastflowratetimer;
-  lastflowratetimer = 0;
 }
