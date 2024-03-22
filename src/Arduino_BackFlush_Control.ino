@@ -111,10 +111,7 @@ void loop()
 
     if (man_backflush_switch_position == LOW)
     {
-      valve_open();
-      pump_on();
-      pump_off();
-      valve_close();
+      flushing_sequence();
       back_flushes_completed += 1;
     }
   }
@@ -126,10 +123,7 @@ void loop()
     if (weekly_timer - prev_time >= weekly_interval)
     {
       prev_time = weekly_timer;
-      valve_open();
-      pump_on();
-      pump_off();
-      valve_close();
+      flushing_sequence();
       back_flushes_completed += 1;
     }
   }
@@ -147,10 +141,7 @@ void loop()
     {
       lcd.setCursor(0, 3);
       lcd.print("No flow detected");
-      valve_open();
-      pump_on();
-      pump_off();
-      valve_close();
+      flushing_sequence();
       back_flushes_completed += 1;
     }
   }
@@ -160,33 +151,30 @@ void loop()
   lcd.print(back_flushes_completed);
 }
 
-void valve_open()
+void flushing_sequence()
 {
   lcd.setCursor(0, 1);
   lcd.print("BF valve opening  ");
   digitalWrite(valve_control_relay, LOW);
   count_down_timer(15);
-}
 
-void valve_close()
-{
+  pump_control();
+
   lcd.setCursor(0, 1);
   lcd.print("BF valve closing  ");
   digitalWrite(valve_control_relay, HIGH);
   count_down_timer(15);
   lcd.clear();
+
 }
 
-void pump_on()
+void pump_control()
 {
   lcd.setCursor(0, 1);
   lcd.print("Pump on         ");
   digitalWrite(pump_control_relay, LOW);
   count_down_timer(10);
-}
 
-void pump_off()
-{
   lcd.setCursor(0, 1);
   lcd.print("Pump off        ");
   digitalWrite(pump_control_relay, HIGH);
