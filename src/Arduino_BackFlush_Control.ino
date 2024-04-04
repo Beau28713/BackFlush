@@ -23,7 +23,7 @@ unsigned long weekly_timer;
 unsigned long count_timer;
 
 unsigned long time_interval = 1000;
-unsigned long check_flow_interval = 10000;
+unsigned long check_flow_interval = 1800000;
 unsigned long weekly_interval = 604800000;
 
 int back_flushes_completed = 0;
