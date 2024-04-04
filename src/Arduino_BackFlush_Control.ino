@@ -35,7 +35,7 @@ unsigned long flow;
 float flowrate;
 unsigned long lastflowratetimer = 0;
 
-SIGNAL(TIMER0_COMPA_vect)
+ISR(TIMER0_COMPA_vect)
 {
   flow = digitalRead(flow_sensor);
   
