@@ -17,57 +17,17 @@ int water_level_sensor = A0;
 
 unsigned long previous_time = 0;
 unsigned long prev_time = 0;
-//unsigned long flow_prev_time = 0;
+// unsigned long flow_prev_time = 0;
 unsigned long weekly_timer;
 unsigned long count_timer;
 
 unsigned long time_interval = 1000;
-//unsigned long check_flow_interval = 1800000;
+// unsigned long check_flow_interval = 1800000;
 unsigned long weekly_interval = 604800000;
 
 int back_flushes_completed = 0;
 float water_level_sensor_output = 0;
 float sensor_voltage = 0;
-
-//unsigned long lastflowpinstate;
-//unsigned long lastpulsesstate = 0;
-//unsigned long pulses = 0;
-//unsigned long flow;
-//float flowrate;
-//unsigned long lastflowratetimer = 0;
-
-// ISR(TIMER0_COMPA_vect)
-// {
-//   flow = digitalRead(flow_sensor);
-
-//   if (flow == lastflowpinstate)
-//   {
-//     lastflowratetimer++;
-//     return;
-//   }
-
-//   if (flow == HIGH)
-//   {
-//     pulses++;
-//   }
-//   lastflowpinstate = flow;
-//   flowrate = 1000.0;
-//   flowrate /= lastflowratetimer;
-//   lastflowratetimer = 0;
-// }
-
-// void useInterrupt(boolean v)
-// {
-//   if (v)
-//   {
-//     OCR0A = 0xAF;
-//     TIMSK0 |= _BV(OCIE0A);
-//   }
-//   else
-//   {
-//     TIMSK0 &= ~_BV(OCIE0A);
-//   }
-// }
 
 void count_down_timer(int timer)
 {
@@ -119,9 +79,6 @@ void setup()
   pinMode(valve_control_relay, OUTPUT);
   pinMode(pump_control_relay, OUTPUT);
   pinMode(low_level_light_relay, OUTPUT);
-  //pinMode(flow_sensor, INPUT);
-  //digitalWrite(flow_sensor, HIGH);
-  //useInterrupt(true);
 
   Serial.begin(9600);
 
@@ -143,10 +100,10 @@ void loop()
   weekly_timer = millis();
 
   water_level_sensor_output = analogRead(water_level_sensor);
-  sensor_voltage = water_level_sensor_output * (5.0 / 1023.0);
+  float sensor_voltage = water_level_sensor_output * (5.0 / 1023.0);
   manual_auto_switch_position = digitalRead(manual_auto_control_switch);
 
-  if (sensor_voltage > 1.5)
+  if (sensor_voltage < 1.5)
   {
     digitalWrite(low_level_light_relay, HIGH);
   }
@@ -154,7 +111,6 @@ void loop()
   {
     digitalWrite(low_level_light_relay, LOW);
   }
-  
 
   if (manual_auto_switch_position == LOW)
   {
@@ -180,24 +136,6 @@ void loop()
       back_flushes_completed += 1;
     }
   }
-
-  // if (weekly_timer - flow_prev_time >= check_flow_interval)
-  // {
-  //   flow_prev_time = weekly_timer;
-  //   if (pulses - lastpulsesstate > 0)
-  //   {
-  //     lcd.setCursor(0, 3);
-  //     lcd.print("Flow detected");
-  //     lastpulsesstate = pulses;
-  //   }
-  //   else
-  //   {
-  //     lcd.setCursor(0, 3);
-  //     lcd.print("No flow detected");
-  //     flushing_sequence();
-  //     back_flushes_completed += 1;
-  //   }
-  // }
 
   lcd.setCursor(0, 2);
   lcd.print("BF completed: ");
