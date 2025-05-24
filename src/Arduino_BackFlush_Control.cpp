@@ -105,11 +105,11 @@ void loop()
 
   if (sensor_voltage < 1.5)
   {
-    digitalWrite(low_level_light_relay, HIGH);
+    digitalWrite(low_level_light_relay, LOW);
   }
   else
   {
-    digitalWrite(low_level_light_relay, LOW);
+    digitalWrite(low_level_light_relay, HIGH);
   }
 
   if (manual_auto_switch_position == LOW)
