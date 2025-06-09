@@ -1,39 +1,58 @@
-## Why I'm doing the project  
-I started this project to help my father keep track of his camper’s water supply. My father had to check the water level every morning and make
-sure the flow from the spring hadn’t stopped. If the flow stopped, he would need to manually insert a water house into the pipe and 
-Back flush the water lines to rid any sand that may have stopped up the line. We installed screens at the spring house to help catch most of the sand  
-but some would still make it through. The lines would also become airlocked (I have a plane for this) and the backflushing would rid the lines of this blockage. 
 
+# Automated Water Management System
 
-## About the project
-In the early stages I used an incandescent lamp in series with a tilt switch. This would give my father a visual indication as to when the water level  
-was below the threshold and needed attention. But this didn’t tell him what the problem was, it just told him there was a problem that needed 
-attention. I wanted a system that would automate the whole process for him with as little human interaction as possible. So, I started working  
-on a modular automated system that would do the things he needed. 
+## Project Overview
 
-I wanted to track water flow and water level also keeping things open and cable of upgrading/dating the system and capabilities in the future.  
+This project was initiated to assist my father in monitoring and managing the water supply for his off-grid camper. Previously, he had to manually check the water level each morning and ensure that water was still flowing from a natural spring source. If the flow stopped due to sediment blockage or airlocks, he would need to manually insert a hose and perform a backflush to clear the lines.
 
-## How it works
-Utilizing an Arduino as the brain, the system monitors the water level and flow via a tilt switch, float, and a water flow sensor. When the water 
-level falls low enough the tilt switch makes contact and the water level input pin on the Arduino is pulled low. This pin is read by the Arduino, 
-relay 1 is then activated thus activating a servo that switches the position of a 3-way water valve blocking flow into the holding tank and opening 
-access to the water lines. Five seconds later the Arduino activates relay 2 turning on a pump. This pump feeds water back into the water line 
-backflushing the lines and removing all sand and airlocks. After running for one minute relay 2 deactivate turning off the pump. After 5 seconds 
-relay 1 deactivates, this activates the 3-way water valve moving it back into its home position allowing water from the spring to once again 
-flow into the holding tanks.  
-The system also has a manual mode where at any time the sequence of operation can be performed when desired. 
+Although we installed a sediment screen at the spring house to reduce the debris, small particles and airlocks would still occasionally block the system. This project aims to automate the monitoring and backflushing process to reduce the need for manual intervention and improve system reliability.
 
-## Field units 
-[3-way water valve](https://www.aliexpress.us/item/3256804648845790.html?spm=a2g0o.order_list.order_list_main.5.695718020k35QP&gatewayAdapt=glo2usa)    
-[5GPM submergible pump](https://www.amazon.com/dp/B09ZV2364K?psc=1&ref=ppx_yo2ov_dt_b_product_details)    
-[water flow meter](https://www.adafruit.com/product/5066)     
-[4 relay board](https://www.amazon.com/dp/B00E0NSORY?ref=ppx_yo2ov_dt_b_product_details&th=1)  
-[Water circulator pump](https://www.amazon.com/dp/B0196WL55G?psc=1&ref=ppx_yo2ov_dt_b_product_details) *For testing water flow sensor  
+## System Objectives
 
-## Control and display:
--[Arduino Uno wifi](https://store-usa.arduino.cc/collections/boards-modules/products/arduino-uno-wifi-rev2?_pos=5&_fid=1e131e922&_ss=c)  
--[AdaFruit LCD Screen with I2C backpack](https://www.adafruit.com/product/292)    
--Various buttons and switches  
+- **Monitor water level and flow status** in real time  
+- **Automate the backflush process** in response to line blockages or low water levels  
+- **Enable manual override mode** for on-demand system flushing  
+- **Design a modular and upgradeable platform** for future feature additions  
 
-## Power:
-120 input -> 12DC output power supply
+## System Description
+
+The system is built around an **Arduino Uno WiFi Rev 2**, which serves as the central controller. Water levels are monitored using a **tilt switch** and **float sensor**, while a **flow sensor** detects water movement.
+
+When the water level drops below a predefined threshold, the Arduino detects a signal from the tilt switch and initiates the following automated sequence:
+
+1. **Relay 1 activates**, rotating a **servo-operated 3-way water valve** to redirect the water line away from the holding tank.
+2. After a 5-second delay, **Relay 2 activates**, powering a **5 GPM submersible pump** to perform a backflush operation.
+3. The pump runs for **1 minute**, clearing out sediment and airlocks from the line.
+4. **Relay 2 deactivates**, turning off the pump.
+5. After a short delay, **Relay 1 deactivates**, returning the 3-way valve to its default position to resume normal water flow to the holding tank.
+
+The system also includes a **manual override mode**, which allows the user to initiate the backflush cycle on demand, regardless of sensor input.
+
+## Hardware Components
+
+### Field Devices
+- [3-Way Servo-Actuated Water Valve](https://www.aliexpress.us/item/3256804648845790.html)
+- [5 GPM Submersible Pump](https://www.amazon.com/dp/B09ZV2364K)
+- [Water Flow Sensor (Adafruit #5066)](https://www.adafruit.com/product/5066)
+- [4-Channel Relay Module](https://www.amazon.com/dp/B00E0NSORY)
+- [Water Circulator Pump (for testing)](https://www.amazon.com/dp/B0196WL55G)
+
+### Control and Display
+- [Arduino Uno WiFi Rev 2](https://store-usa.arduino.cc/products/arduino-uno-wifi-rev2)
+- [Adafruit 16x2 LCD with I2C Backpack](https://www.adafruit.com/product/292)
+- Push buttons, toggle switches, and status LEDs
+
+### Power Supply
+- **Input:** 120V AC  
+- **Output:** 12V DC regulated power supply
+
+## Future Improvements
+
+- Integration with cloud monitoring for remote alerts and control  
+- Addition of pressure sensors and logging capability  
+- Solar power integration for off-grid energy independence  
+- Enclosure for weatherproofing and durability in the field
+
+## License
+
+This project is open-source and available under the MIT License. Contributions and suggestions for improvement are welcome.
