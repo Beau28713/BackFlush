@@ -3,7 +3,7 @@
 
 ## Project Overview
 
-This project was initiated to assist my father in monitoring and managing the water supply for his off-grid camper. Previously, he had to manually check the water level each morning and ensure that water was still flowing from a natural spring source. If the flow stopped due to sediment blockage or airlocks, he would need to manually insert a hose and perform a backflush to clear the lines.
+This project was initiated to assist my father in monitoring and managing the water supply. Previously, he had to manually check the water level each morning and ensure that water was still flowing from a natural spring source. If the flow stopped due to sediment blockage or airlocks, he would need to manually insert a hose and perform a backflush to clear the lines.
 
 Although we installed a sediment screen at the spring house to reduce the debris, small particles and airlocks would still occasionally block the system. This project aims to automate the monitoring and backflushing process to reduce the need for manual intervention and improve system reliability.
 
