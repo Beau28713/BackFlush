@@ -1,58 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="description" content="Automated Back Flush Filtration System using Arduino and sensors">
+  <title>Back Flush Filtration System</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      line-height: 1.6;
+      margin: 2rem auto;
+      max-width: 900px;
+      padding: 0 1rem;
+      color: #333;
+    }
+    h1, h2 {
+      color: #0a446f;
+    }
+    pre {
+      background: #f4f4f4;
+      padding: 1rem;
+      border-left: 5px solid #0a446f;
+      overflow-x: auto;
+    }
+    a {
+      color: #0a446f;
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+    .section {
+      margin-bottom: 2rem;
+    }
+    hr {
+      margin: 2rem 0;
+    }
+  </style>
+</head>
+<body>
 
-# Automated Water Management System
+  <h1>💧 Automated Back Flush Filtration System</h1>
+  <p>This system automates the back-flush cycle of a sediment filter using Arduino-based controls, designed for water efficiency and reduced maintenance in home and small-scale environments.</p>
 
-## Project Overview
+  <hr>
 
-This project was initiated to assist my father in monitoring and managing the water supply. Previously, he had to manually check the water level each morning and ensure that water was still flowing from a natural spring source. If the flow stopped due to sediment blockage or airlocks, he would need to manually insert a hose and perform a backflush to clear the lines.
+  <div class="section">
+    <h2>🔧 System Overview</h2>
+    <ul>
+      <li><strong>Controller:</strong> Arduino Uno WiFi Rev 2</li>
+      <li><strong>Sensors:</strong> Pressure sensor, digital flow meter</li>
+      <li><strong>Actuators:</strong> 12V solenoid valves</li>
+      <li><strong>Display:</strong> 20x4 I2C LCD</li>
+      <li><strong>Input:</strong> Manual control buttons</li>
+      <li><strong>Power:</strong> 12V DC with onboard regulation</li>
+    </ul>
+  </div>
 
-Although we installed a sediment screen at the spring house to reduce the debris, small particles and airlocks would still occasionally block the system. This project aims to automate the monitoring and backflushing process to reduce the need for manual intervention and improve system reliability.
+  <div class="section">
+    <h2>⚙️ Key Features</h2>
+    <ul>
+      <li>Time- or pressure-triggered flush cycles</li>
+      <li>Real-time LCD monitoring of system state</li>
+      <li>Manual override and configurable intervals</li>
+      <li>3D-printed enclosures for hardware protection</li>
+    </ul>
+  </div>
 
-## System Objectives
+  <div class="section">
+    <h2>🧠 Control Logic</h2>
+    <pre><code>if (millis() - lastFlushTime > flushInterval || pressureDropDetected()) {
+    initiateBackFlush();
+}</code></pre>
+    <p>Flushes automatically on a timer or when filter clogging is detected.</p>
+  </div>
 
-- **Monitor water level and flow status** in real time  
-- **Automate the backflush process** in response to line blockages or low water levels  
-- **Enable manual override mode** for on-demand system flushing  
-- **Design a modular and upgradeable platform** for future feature additions  
+  <div class="section">
+    <h2>🛠️ Design & Hardware</h2>
+    <ul>
+      <li>Enclosure designs created in Fusion 360</li>
+      <li>LCD displays pressure, valve status, and countdowns</li>
+      <li>Custom wiring and logic layout on perfboard</li>
+    </ul>
+  </div>
 
-## System Description
+  <div class="section">
+    <h2>🚀 Future Upgrades</h2>
+    <ul>
+      <li>MQTT integration for wireless updates</li>
+      <li>Modbus RTU for Ignition SCADA integration</li>
+      <li>Pressure trend logging with SD card or WiFi</li>
+    </ul>
+  </div>
 
-The system is built around an **Arduino Uno WiFi Rev 2**, which serves as the central controller. Water levels are monitored using a **tilt switch** and **float sensor**, while a **flow sensor** detects water movement.
+  <div class="section">
+    <h2>📸 Media (Coming Soon)</h2>
+    <p>Photos, LCD screenshots, and enclosure views will be added shortly.</p>
+  </div>
 
-When the water level drops below a predefined threshold, the Arduino detects a signal from the tilt switch and initiates the following automated sequence:
+  <div class="section">
+    <h2>🔗 Links</h2>
+    <ul>
+      <li><a href="https://github.com/Beau28713/Beau28713.github.io/tree/main/back%20flush">Source Code on GitHub</a></li>
+      <li><a href="https://beau28713.github.io">Main Site</a></li>
+    </ul>
+  </div>
 
-1. **Relay 1 activates**, rotating a **servo-operated 3-way water valve** to redirect the water line away from the holding tank.
-2. After a 5-second delay, **Relay 2 activates**, powering a **5 GPM submersible pump** to perform a backflush operation.
-3. The pump runs for **1 minute**, clearing out sediment and airlocks from the line.
-4. **Relay 2 deactivates**, turning off the pump.
-5. After a short delay, **Relay 1 deactivates**, returning the 3-way valve to its default position to resume normal water flow to the holding tank.
-
-The system also includes a **manual override mode**, which allows the user to initiate the backflush cycle on demand, regardless of sensor input.
-
-## Hardware Components
-
-### Field Devices
-- [3-Way Servo-Actuated Water Valve](https://www.aliexpress.us/item/3256804648845790.html)
-- [5 GPM Submersible Pump](https://www.amazon.com/dp/B09ZV2364K)
-- [Water Flow Sensor (Adafruit #5066)](https://www.adafruit.com/product/5066)
-- [4-Channel Relay Module](https://www.amazon.com/dp/B00E0NSORY)
-- [Water Circulator Pump (for testing)](https://www.amazon.com/dp/B0196WL55G)
-
-### Control and Display
-- [Arduino Uno WiFi Rev 2](https://store-usa.arduino.cc/products/arduino-uno-wifi-rev2)
-- [Adafruit 16x2 LCD with I2C Backpack](https://www.adafruit.com/product/292)
-- Push buttons, toggle switches, and status LEDs
-
-### Power Supply
-- **Input:** 120V AC  
-- **Output:** 12V DC regulated power supply
-
-## Future Improvements
-
-- Integration with cloud monitoring for remote alerts and control  
-- Addition of pressure sensors and logging capability  
-- Solar power integration for off-grid energy independence  
-- Enclosure for weatherproofing and durability in the field
-
-## License
-
-This project is open-source and available under the MIT License. Contributions and suggestions for improvement are welcome.
+</body>
+</html>
