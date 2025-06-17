@@ -48,12 +48,12 @@ void pump_control()
   lcd.setCursor(0, 1);
   lcd.print("Pump on         ");
   digitalWrite(pump_control_relay, LOW);
-  count_down_timer(10);
+  count_down_timer(60);
 
   lcd.setCursor(0, 1);
   lcd.print("Pump off        ");
   digitalWrite(pump_control_relay, HIGH);
-  count_down_timer(5);
+  count_down_timer(10);
 }
 
 void flushing_sequence()
