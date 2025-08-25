@@ -14,6 +14,7 @@ int manual_auto_switch_position = 0;
 int man_backflush_switch = 2;
 int manual_auto_control_switch = 13;
 int water_level_sensor = A0;
+int pressure_sensor = A1;
 
 unsigned long previous_time = 0;
 unsigned long prev_time = 0;
@@ -27,6 +28,7 @@ unsigned long weekly_interval = 604800000;
 
 int back_flushes_completed = 0;
 float water_level_sensor_output = 0;
+float pressure_sensor_output = 0;
 float sensor_voltage = 0;
 
 void count_down_timer(int timer)
@@ -41,7 +43,17 @@ void count_down_timer(int timer)
       previous_time = count_timer;
       time_count += 1;
     }
-  }
+    pressure_sensor_output = analogRead(pressure_sensor);
+    float pressure_sensor_voltage = pressure_sensor_output * (5.0 / 1023.0);
+    lcd.setCursor(0, 3);
+    lcd.print("Pressure voltage: ");
+    lcd.print(pressure_sensor_voltage);
+
+    if (pressure_sensor_voltage >= 1.00)
+    {
+      break;
+    }
+    }
 }
 void pump_control()
 {
@@ -100,10 +112,12 @@ void loop()
   weekly_timer = millis();
 
   water_level_sensor_output = analogRead(water_level_sensor);
-  float sensor_voltage = water_level_sensor_output * (5.0 / 1023.0);
+
+  float water_sensor_voltage = water_level_sensor_output * (5.0 / 1023.0);
+
   manual_auto_switch_position = digitalRead(manual_auto_control_switch);
 
-  if (sensor_voltage < 1.5)
+  if (water_sensor_voltage < 2.0)
   {
     digitalWrite(low_level_light_relay, LOW);
   }
